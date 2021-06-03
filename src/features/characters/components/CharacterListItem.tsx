@@ -1,5 +1,6 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {Character} from '../../../services/graphql';
 
 const avatarSize = 60;
@@ -9,17 +10,16 @@ const CharacterListItemBase: React.FC<{
   onPress: () => void;
   style: object;
 }> = ({item, onPress, style}) => {
+  const itemImage = item && item.image ? item.image : undefined;
+
   return (
     <TouchableOpacity activeOpacity={1} onPress={onPress}>
       <View style={[styles.container, style]}>
-        {item?.image && (
-          <Image
-            style={styles.avatar}
-            source={{uri: item.image}}
-            resizeMode={'cover'}
-          />
-        )}
-
+        <FastImage
+          style={styles.avatar}
+          source={{uri: itemImage}}
+          resizeMode={FastImage.resizeMode.cover}
+        />
         <View style={styles.body}>
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.text}>
