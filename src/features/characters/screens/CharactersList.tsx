@@ -12,7 +12,7 @@ import {CharactersScreen} from '../../../app/navigation/enums/CharactersScreen';
 import {CharactersNavigatorParamsList} from '../../../app/navigation/params/CharactersNavigatorParamsList';
 import {getItemLayout} from '../../../constants/Layout';
 import DependencyContext from '../../../services/di/DependencyContext';
-import {Character, Info} from '../../../services/graphql';
+import {Character, Characters, Info, Maybe} from '../../../services/graphql';
 import {useCharactersQuery} from '../apis/useCharactersQuery';
 import {CharacterListItem} from '../components/CharacterListItem';
 import {characterRepositoryInjectionKey} from '../injection-keys';
@@ -30,12 +30,13 @@ export const CharactersList: React.FC<{
     characterRepositoryInjectionKey,
   );
 
-  const {data, loading} = useCharactersQuery({
+  const {data, loading, error, fetchMore} = useCharactersQuery({
     page: 1,
   });
 
   const [characters, setCharacters] = React.useState<Character[]>([]);
   const [listInfo, setListInfo] = React.useState<Info>();
+  const [isMoreLoading, setIsMoreLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (!Boolean(data)) {
@@ -56,7 +57,30 @@ export const CharactersList: React.FC<{
       return;
     }
 
-    // TODO: Fetch more
+    setIsMoreLoading(true);
+    fetchMore({
+      variables: {page: listInfo?.next ?? 2},
+    }).then(
+      ({
+        data: {characters: moreCharacters},
+      }: {
+        data: {
+          characters: Maybe<Characters>;
+        };
+      }) => {
+        if (moreCharacters && moreCharacters.results && moreCharacters.info) {
+          const totalCharacters = characterRepository.mergeCharacters(
+            characters,
+            moreCharacters.results,
+          );
+
+          setCharacters([...totalCharacters]);
+          setListInfo(moreCharacters.info);
+        }
+
+        setIsMoreLoading(false);
+      },
+    );
   };
 
   const onPressItem = (id: string) => {
@@ -80,7 +104,11 @@ export const CharactersList: React.FC<{
   const renderListFooterComponent = () => {
     return (
       <TouchableOpacity onPress={onLoadMore} style={styles.loadMoreContainer}>
-        {loading ? <ActivityIndicator size="small" /> : <Text>Load More</Text>}
+        {loading || isMoreLoading ? (
+          <ActivityIndicator size="small" />
+        ) : (
+          <Text>Load More</Text>
+        )}
       </TouchableOpacity>
     );
   };
@@ -88,6 +116,7 @@ export const CharactersList: React.FC<{
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.headerTitle}>Characters</Text>
+      {error && <Text style={styles.errorText}>No characters!</Text>}
       <FlatList
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}
@@ -128,6 +157,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: 'black',
     borderWidth: 1,
+    alignSelf: 'center',
+  },
+  errorText: {
+    fontSize: 16,
+    color: 'black',
+    padding: 20,
     alignSelf: 'center',
   },
 });

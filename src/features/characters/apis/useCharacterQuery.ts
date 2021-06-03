@@ -1,4 +1,4 @@
-import {useQuery} from '@apollo/client';
+import {ApolloError, useQuery} from '@apollo/client';
 import {Query, QueryCharacterArgs} from '../../../services/graphql';
 import {CharacterQuery} from '../../../services/graphql/characters/CharacterQuery';
 
@@ -7,7 +7,7 @@ export const useCharacterQuery = (
 ): {
   data: any;
   loading: boolean;
-  error: any;
+  error?: ApolloError;
 } => {
   const {data, loading, error} = useQuery<
     Pick<Query, 'character'>,
