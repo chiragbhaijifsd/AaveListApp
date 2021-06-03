@@ -1,4 +1,3 @@
-import {useQuery} from '@apollo/client';
 import {RouteProp} from '@react-navigation/core';
 import {StackNavigationProp} from '@react-navigation/stack';
 import React from 'react';
@@ -14,32 +13,10 @@ import FastImage from 'react-native-fast-image';
 import {CharactersScreen} from '../../../app/navigation/enums/CharactersScreen';
 import {CharactersNavigatorParamsList} from '../../../app/navigation/params/CharactersNavigatorParamsList';
 import {BackBlackIcon} from '../../../constants/SvgImageAssets';
-import {Episode, Query, QueryCharacterArgs} from '../../../services/graphql';
-import {CharacterQuery} from '../../../services/graphql/characters/CharacterQuery';
+import {Episode} from '../../../services/graphql';
+import {useCharacterQuery} from '../apis/useCharacterQuery';
 import {EpisodeListItem} from '../components/EpisodeListItem';
 import {LocationCard} from '../components/LocationCard';
-
-const useCharacterQuery = (
-  args: QueryCharacterArgs,
-): {
-  data: any;
-  loading: boolean;
-  error: any;
-} => {
-  const {data, loading, error} = useQuery<
-    Pick<Query, 'character'>,
-    QueryCharacterArgs
-  >(CharacterQuery, {
-    fetchPolicy: 'network-only',
-    variables: args,
-  });
-
-  return {
-    data: data?.character,
-    loading,
-    error,
-  };
-};
 
 const bannerHeight = 250;
 const backBtnSize = 50;

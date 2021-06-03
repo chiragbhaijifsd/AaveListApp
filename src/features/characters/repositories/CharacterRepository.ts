@@ -20,7 +20,15 @@ export class CharacterRepository {
   }
 
   hasNextCharactersPage(listInfo?: Maybe<Info>): boolean {
-    console.log('\n\n\nlistInfo: ', listInfo);
-    return true;
+    if (
+      listInfo &&
+      listInfo.next &&
+      listInfo.pages &&
+      listInfo.next <= listInfo.pages
+    ) {
+      return true;
+    }
+
+    return false;
   }
 }

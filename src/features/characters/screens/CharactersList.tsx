@@ -1,4 +1,3 @@
-import {useQuery} from '@apollo/client';
 import {StackNavigationProp} from '@react-navigation/stack';
 import React from 'react';
 import {
@@ -13,41 +12,10 @@ import {CharactersScreen} from '../../../app/navigation/enums/CharactersScreen';
 import {CharactersNavigatorParamsList} from '../../../app/navigation/params/CharactersNavigatorParamsList';
 import {getItemLayout} from '../../../constants/Layout';
 import DependencyContext from '../../../services/di/DependencyContext';
-import {
-  Character,
-  Info,
-  Query,
-  QueryCharactersArgs,
-} from '../../../services/graphql';
-import {CharactersQuery} from '../../../services/graphql/characters/CharactersQuery';
+import {Character, Info} from '../../../services/graphql';
+import {useCharactersQuery} from '../apis/useCharactersQuery';
 import {CharacterListItem} from '../components/CharacterListItem';
 import {characterRepositoryInjectionKey} from '../injection-keys';
-
-const useCharactersQuery = (
-  args: QueryCharactersArgs,
-): {
-  data: any;
-  loading: boolean;
-  error: any;
-  fetchMore: any;
-  refetch: any;
-} => {
-  const {data, loading, fetchMore, error, refetch} = useQuery<
-    Pick<Query, 'characters'>,
-    QueryCharactersArgs
-  >(CharactersQuery, {
-    fetchPolicy: 'network-only',
-    variables: args,
-  });
-
-  return {
-    data,
-    loading,
-    error,
-    fetchMore,
-    refetch,
-  };
-};
 
 const listItemHeight = 80;
 
