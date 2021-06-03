@@ -2,6 +2,8 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Character} from '../../../services/graphql';
 
+const avatarSize = 60;
+
 const CharacterListItemBase: React.FC<{
   item: Character;
   onPress: () => void;
@@ -10,11 +12,14 @@ const CharacterListItemBase: React.FC<{
   return (
     <TouchableOpacity activeOpacity={1} onPress={onPress}>
       <View style={[styles.container, style]}>
-        <Image
-          style={styles.avatar}
-          source={{uri: item.image}}
-          resizeMode={'cover'}
-        />
+        {item?.image && (
+          <Image
+            style={styles.avatar}
+            source={{uri: item.image}}
+            resizeMode={'cover'}
+          />
+        )}
+
         <View style={styles.body}>
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.text}>
@@ -38,9 +43,10 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: avatarSize,
+    height: avatarSize,
+    borderRadius: avatarSize / 2,
+    backgroundColor: 'lightgrey',
   },
   body: {
     flex: 1,

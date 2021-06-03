@@ -11,9 +11,10 @@ import {
 } from 'react-native';
 import {CharactersScreen} from '../../../app/navigation/enums/CharactersScreen';
 import {CharactersNavigatorParamsList} from '../../../app/navigation/params/CharactersNavigatorParamsList';
-import {Query, QueryCharacterArgs} from '../../../services/graphql';
+import {Episode, Query, QueryCharacterArgs} from '../../../services/graphql';
 import {CharacterQuery} from '../../../services/graphql/characters/CharacterQuery';
-import EpisodeListItem from '../components/EpisodeListItem';
+import {EpisodeListItem} from '../components/EpisodeListItem';
+import {LocationCard} from '../components/LocationCard';
 
 const useCharacterQuery = (
   args: QueryCharacterArgs,
@@ -37,7 +38,7 @@ const useCharacterQuery = (
   };
 };
 
-const BANNER_HEIGHT = 300;
+const bannerHeight = 300;
 const containerWidth = 36;
 const containerHeight = 20;
 
@@ -50,6 +51,10 @@ export const CharacterDetail: React.FC<{
   const {id} = route.params;
   const {data} = useCharacterQuery({id});
 
+  const renderEpisode = ({item}: {item: Episode}) => (
+    <EpisodeListItem item={item} />
+  );
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -58,100 +63,45 @@ export const CharacterDetail: React.FC<{
           source={{uri: data?.image}}
           resizeMode={'cover'}
         />
-        <View style={styles.contentContainer}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginTop: 16,
-            }}>
-            <Text
-              numberOfLines={1}
-              style={{fontSize: 16, fontWeight: '700', color: 'black'}}>
+        <View style={styles.body}>
+          <View style={styles.nameContainer}>
+            <Text numberOfLines={1} style={styles.name}>
               {data?.name}
             </Text>
-            <View
-              style={{
-                backgroundColor: 'green',
-                borderRadius: 3,
-                width: containerWidth,
-                height: containerHeight,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={{color: 'white', fontSize: 12, fontWeight: '700'}}>
-                {data?.status}
-              </Text>
+            <View style={styles.statusContainer}>
+              <Text style={styles.status}>{data?.status}</Text>
             </View>
           </View>
 
-          <View style={styles.detailItemContainer}>
-            <View style={[styles.keyInfo, {marginRight: 20}]}>
-              <Text
-                style={{
-                  marginBottom: 3,
-                  fontSize: 12,
-                  fontWeight: '400',
-                  color: 'black',
-                }}>
-                Species
-              </Text>
-              <Text
-                style={{
-                  width: 64,
-                  fontSize: 12,
-                  fontWeight: '700',
-                  color: 'black',
-                }}>
-                {data?.species}
-              </Text>
+          <View style={styles.speciesGenderContainer}>
+            <View>
+              <Text style={styles.label}>Species</Text>
+              <Text style={styles.value}>{data?.species}</Text>
             </View>
-            <View style={styles.keyInfo}>
-              <Text
-                style={{
-                  marginBottom: 3,
-                  fontSize: 12,
-                  fontWeight: '400',
-                  color: 'black',
-                }}>
-                Gender
-              </Text>
-              <Text
-                style={{
-                  width: 64,
-                  fontSize: 12,
-                  fontWeight: '700',
-                  color: 'black',
-                }}>
-                {data?.gender}
-              </Text>
+            <View>
+              <Text style={styles.label}>Gender</Text>
+              <Text style={styles.value}>{data?.gender}</Text>
             </View>
           </View>
-
-          {/* <DescriptionCard
-            style={{marginTop: Dimens.STANDARD}}
-            label={'Location'}
-            item={data.location}
-          />
-          <DescriptionCard
-            style={{marginTop: Dimens.STANDARD}}
-            label={'Origin'}
-            item={data.origin}
-          />
-          <H2 style={{marginTop: Dimens.SMALL}} numberOfLines={1}>
-            {Strings.EPISODES}
-          </H2> */}
-
+          <View style={styles.locationContainer}>
+            <LocationCard
+              label="Location"
+              title={data?.location?.name}
+              type={data?.location?.type}
+            />
+            <LocationCard
+              label="Origin"
+              title={data?.origin?.name}
+              type={data?.origin?.type}
+            />
+          </View>
+          <Text style={styles.episodesLabel}>List of Episodes</Text>
           <FlatList
+            nestedScrollEnabled
             showsVerticalScrollIndicator={false}
-            data={data?.episode}
-            style={styles.listContainer}
-            keyExtractor={item => item.id.toString()}
-            renderItem={episodeItem => (
-              <EpisodeListItem item={episodeItem.item} />
-            )}
+            data={data?.episode ?? []}
+            keyExtractor={(_, i) => i.toString()}
+            renderItem={renderEpisode}
           />
         </View>
       </View>
@@ -160,31 +110,48 @@ export const CharacterDetail: React.FC<{
 };
 
 const styles = StyleSheet.create({
-  container: {
+  container: {backgroundColor: 'white', flex: 1},
+  banner: {height: bannerHeight},
+  body: {paddingHorizontal: 20, paddingVertical: 3},
+  nameContainer: {
     backgroundColor: 'white',
-    flex: 1,
-  },
-  banner: {
-    height: BANNER_HEIGHT,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-  },
-  contentContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 3,
-  },
-  listContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: 16,
-    marginBottom: 24,
   },
-  detailItemContainer: {
+  name: {fontSize: 18, fontWeight: '500', color: 'black'},
+  statusContainer: {
+    backgroundColor: 'green',
+    borderRadius: 3,
+    width: containerWidth,
+    height: containerHeight,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  status: {color: 'white', fontSize: 12, fontWeight: '700'},
+  speciesGenderContainer: {
     flexDirection: 'row',
     marginTop: 12,
   },
-  keyInfo: {
-    flexDirection: 'column',
-    marginTop: 3,
+  label: {
+    marginBottom: 3,
+    fontSize: 12,
+    fontWeight: '400',
+    color: 'black',
   },
+  value: {
+    width: 64,
+    fontSize: 12,
+    fontWeight: '700',
+    color: 'black',
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 20,
+  },
+  episodesLabel: {fontSize: 18, fontWeight: '500'},
 });
 
 export default CharacterDetail;
