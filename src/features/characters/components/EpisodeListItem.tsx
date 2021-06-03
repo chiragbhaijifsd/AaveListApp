@@ -10,7 +10,7 @@ const characterListItem = 60;
 const EpisodeListItemBase = ({item}: {item: Episode}) => {
   const {name, air_date, episode, characters} = item;
 
-  const renderCharactersListItem = ({character}: {character: Character}) => (
+  const renderCharactersListItem = ({item: character}: {item: Character}) => (
     <EpisodeCharactersListItem
       style={{height: characterListItem}}
       name={character?.name ?? ''}
@@ -32,7 +32,7 @@ const EpisodeListItemBase = ({item}: {item: Episode}) => {
         <FlatList
           nestedScrollEnabled
           horizontal
-          showsHorizontalScrollIndicator={false}
+          showsHorizontalScrollIndicator
           data={characters ?? []}
           getItemLayout={(_, index) => getItemLayout(index, characterListItem)}
           keyExtractor={(_, i) => i.toString()}
@@ -45,11 +45,11 @@ const EpisodeListItemBase = ({item}: {item: Episode}) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    padding: 16,
     borderWidth: 1,
-    borderRadius: 8,
-    borderColor: 'black',
-    marginBottom: 24,
+    borderColor: 'lightgrey',
+    marginVertical: 10,
+    padding: 10,
+    borderRadius: 10,
   },
   name: {fontSize: 16, fontWeight: '500', color: 'black'},
   episodeName: {fontSize: 14, color: '#00000090'},

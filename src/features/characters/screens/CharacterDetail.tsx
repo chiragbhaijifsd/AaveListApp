@@ -2,9 +2,9 @@ import {useQuery} from '@apollo/client';
 import {RouteProp} from '@react-navigation/core';
 import React from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -38,7 +38,7 @@ const useCharacterQuery = (
   };
 };
 
-const bannerHeight = 300;
+const bannerHeight = 250;
 const containerWidth = 36;
 const containerHeight = 20;
 
@@ -49,63 +49,61 @@ export const CharacterDetail: React.FC<{
   >;
 }> = ({route}) => {
   const {id} = route.params;
-  const {data} = useCharacterQuery({id});
+  const {data, loading} = useCharacterQuery({id});
 
   const renderEpisode = ({item}: {item: Episode}) => (
     <EpisodeListItem item={item} />
   );
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Image
-          style={styles.banner}
-          source={{uri: data?.image}}
-          resizeMode={'cover'}
-        />
-        <View style={styles.body}>
-          <View style={styles.nameContainer}>
-            <Text numberOfLines={1} style={styles.name}>
-              {data?.name}
-            </Text>
-            <View style={styles.statusContainer}>
-              <Text style={styles.status}>{data?.status}</Text>
-            </View>
+    <View style={styles.container}>
+      <Image
+        style={styles.banner}
+        source={{uri: data?.image}}
+        resizeMode={'cover'}
+      />
+      <View style={styles.body}>
+        <View style={styles.nameContainer}>
+          <Text numberOfLines={1} style={styles.name}>
+            {data?.name}
+          </Text>
+          <View style={styles.statusContainer}>
+            <Text style={styles.status}>{data?.status}</Text>
           </View>
-
-          <View style={styles.speciesGenderContainer}>
-            <View>
-              <Text style={styles.label}>Species</Text>
-              <Text style={styles.value}>{data?.species}</Text>
-            </View>
-            <View>
-              <Text style={styles.label}>Gender</Text>
-              <Text style={styles.value}>{data?.gender}</Text>
-            </View>
+        </View>
+        <View style={styles.speciesGenderContainer}>
+          <View>
+            <Text style={styles.label}>Species</Text>
+            <Text style={styles.value}>{data?.species}</Text>
           </View>
-          <View style={styles.locationContainer}>
-            <LocationCard
-              label="Location"
-              title={data?.location?.name}
-              type={data?.location?.type}
-            />
-            <LocationCard
-              label="Origin"
-              title={data?.origin?.name}
-              type={data?.origin?.type}
-            />
+          <View>
+            <Text style={styles.label}>Gender</Text>
+            <Text style={styles.value}>{data?.gender}</Text>
           </View>
-          <Text style={styles.episodesLabel}>List of Episodes</Text>
-          <FlatList
-            nestedScrollEnabled
-            showsVerticalScrollIndicator={false}
-            data={data?.episode ?? []}
-            keyExtractor={(_, i) => i.toString()}
-            renderItem={renderEpisode}
+        </View>
+        <View style={styles.locationContainer}>
+          <LocationCard
+            label="Location"
+            title={data?.location?.name}
+            type={data?.location?.type}
+          />
+          <LocationCard
+            label="Origin"
+            title={data?.origin?.name}
+            type={data?.origin?.type}
           />
         </View>
+        <Text style={styles.episodesLabel}>List of Episodes</Text>
+        <FlatList
+          nestedScrollEnabled
+          showsVerticalScrollIndicator={false}
+          data={data?.episode ?? []}
+          keyExtractor={(_, i) => i.toString()}
+          renderItem={renderEpisode}
+        />
       </View>
-    </ScrollView>
+      {loading && <ActivityIndicator size="small" />}
+    </View>
   );
 };
 

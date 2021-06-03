@@ -15,7 +15,7 @@ const LocationCardBase: React.FC<{
 
 const styles = StyleSheet.create({
   container: {
-    height: 150,
+    height: 100,
     width: '45%',
     backgroundColor: 'lightgrey',
     shadowColor: 'black',
