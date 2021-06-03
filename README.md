@@ -49,74 +49,76 @@ $ yarn android
 
 ### Structure
 
+```
 src/
 ├── app
 │   ├── components
 │   │   ├── AppContainer.tsx
 │   │   └── GraphQL.tsx
 │   └── navigation
-│   ├── enums
-│   │   ├── CharactersScreen.ts
-│   │   └── Navigator.ts
-│   ├── navigators
-│   │   ├── AppNavigator.tsx
-│   │   └── CharactersNavigator.tsx
-│   ├── params
-│   │   ├── AppNavigatorParamsList.tsx
-│   │   └── CharactersNavigatorParamsList.ts
-│   └── types
-│   └── ParamsListOption.ts
+│       ├── enums
+│       │   ├── CharactersScreen.ts
+│       │   └── Navigator.ts
+│       ├── navigators
+│       │   ├── AppNavigator.tsx
+│       │   └── CharactersNavigator.tsx
+│       ├── params
+│       │   ├── AppNavigatorParamsList.tsx
+│       │   └── CharactersNavigatorParamsList.ts
+│       └── types
+│           └── ParamsListOption.ts
 ├── assets
 │   ├── gifs
 │   │   └── list-app-demo.gif
 │   └── svgs
-│   └── back-black.svg
+│       └── back-black.svg
 ├── common
 │   └── utilities
-│   ├── firstName.ts
-│   └── index.ts
+│       ├── firstName.ts
+│       └── index.ts
 ├── constants
 │   ├── Environment.ts
 │   ├── Layout.ts
 │   └── SvgImageAssets.ts
 ├── features
 │   └── characters
-│   ├── apis
-│   │   ├── useCharacterQuery.ts
-│   │   └── useCharactersQuery.ts
-│   ├── components
-│   │   ├── CharacterListItem.tsx
-│   │   ├── EpisodeCharactersListItem.tsx
-│   │   ├── EpisodeListItem.tsx
-│   │   └── LocationCard.tsx
-│   ├── injection-keys
-│   │   ├── characterRepositoryInjectionKey.ts
-│   │   └── index.ts
-│   ├── repositories
-│   │   └── CharacterRepository.ts
-│   └── screens
-│   ├── CharacterDetail.tsx
-│   ├── CharactersList.tsx
-│   └── index.ts
+│       ├── apis
+│       │   ├── useCharacterQuery.ts
+│       │   └── useCharactersQuery.ts
+│       ├── components
+│       │   ├── CharacterListItem.tsx
+│       │   ├── EpisodeCharactersListItem.tsx
+│       │   ├── EpisodeListItem.tsx
+│       │   └── LocationCard.tsx
+│       ├── injection-keys
+│       │   ├── characterRepositoryInjectionKey.ts
+│       │   └── index.ts
+│       ├── repositories
+│       │   └── CharacterRepository.ts
+│       └── screens
+│           ├── CharacterDetail.tsx
+│           ├── CharactersList.tsx
+│           └── index.ts
 └── services
-├── di
-│   ├── Dependencies.ts
-│   ├── DependencyContext.ts
-│   ├── IDependencies.ts
-│   ├── InjectionKey.ts
-│   ├── InjectionKeyScope.ts
-│   └── index.ts
-└── graphql
-├── characters
-│   ├── CharacterFragment.ts
-│   ├── CharacterLocationFragment.ts
-│   ├── CharacterQuery.ts
-│   ├── CharactersQuery.ts
-│   └── EpisodeFragment.ts
-├── index.d.ts
-└── whitelist.json
+    ├── di
+    │   ├── Dependencies.ts
+    │   ├── DependencyContext.ts
+    │   ├── IDependencies.ts
+    │   ├── InjectionKey.ts
+    │   ├── InjectionKeyScope.ts
+    │   └── index.ts
+    └── graphql
+        ├── characters
+        │   ├── CharacterFragment.ts
+        │   ├── CharacterLocationFragment.ts
+        │   ├── CharacterQuery.ts
+        │   ├── CharactersQuery.ts
+        │   └── EpisodeFragment.ts
+        ├── index.d.ts
+        └── whitelist.json
 
 24 directories, 41 files
+```
 
 - `src/app`: It contains app level implemenations which should be used at once in whole application lifecycle like AppContainer, GraphQL and navigation.
 - `src/assets`: It contains all type raw assets like svgs, gifs.
