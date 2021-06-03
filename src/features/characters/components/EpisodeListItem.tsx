@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'lightgrey',
     marginVertical: 10,
+    marginHorizontal: 20,
     padding: 10,
     borderRadius: 10,
   },
